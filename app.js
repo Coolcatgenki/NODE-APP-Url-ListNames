@@ -108,6 +108,6 @@ app.get("/about", function(req, res){
     res.render("about");
 })
 
-app.listen(2000, function(){
+app.listen(process.env.PORT||2000, function(){
     console.log("The server is running on the port 2000");
 })
