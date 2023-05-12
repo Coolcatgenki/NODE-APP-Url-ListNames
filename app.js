@@ -9,7 +9,7 @@ const PORT= process.env.PORT || 3000;
 
 main().catch(err=>console.log(err));
 async function main(){
-await mongoose.connect(PROCESS.env.MONGO);
+await mongoose.connect(process.env.MONGO);
 }
 const toDoListSchema= new mongoose.Schema({
     task: String,
