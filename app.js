@@ -5,6 +5,7 @@ const mongoose= require("mongoose");
 const bodyPaser=require("body-parser");
 const date= require(__dirname+"/date.js");
 const _=require("lodash");
+const PORT= process.env.PORT || 3000;
 
 main().catch(err=>console.log(err));
 async function main(){
@@ -108,6 +109,6 @@ app.get("/about", function(req, res){
     res.render("about");
 })
 
-app.listen(process.env.PORT||2000, function(){
+app.listen(PORT, function(){
     console.log("The server is running on the port 2000");
 })
