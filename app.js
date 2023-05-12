@@ -23,21 +23,36 @@ const listSchema= new mongoose.Schema({
 
 const listModel= new mongoose.model("lists", listSchema);
 
-let history= false;
+const historySchema= new mongoose.Schema({
+    name: String,
+    history: Boolean,
+});
+
+const historyModel= new mongoose.model("history", historySchema);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyPaser.urlencoded({extended:true}));
 
 app.get("/", async function(request, response){
+const conjuntoHistorias= await historyModel.find({});
 const tasks= await toDoList.find({});
-if(tasks.length===0 && history===false){
-    const newTask= new toDoList({
-        task: "New list Evolution!",
-    });
-    await newTask.save();
-    response.redirect("/");
-    history= true;
+if(tasks.length===0 && conjuntoHistorias.length===0 ){
+    if(conjuntoHistorias.length===0){
+        const history= new historyModel({
+        name: "histories",
+        history: false,
+        })
+        await history.save();
+    }
+    const historie= await historyModel.findOne({name: "histories"});
+    if(historie.history===false){
+        const newTask= new toDoList({
+            task: "New list Evolution!",
+        });
+        await newTask.save();
+        await historyModel.findOneAndUpdate({name: "histories"}, {history: true});
+    }
 }else{
     response.render("list", {listTitle:"Today", newItems:tasks});
 }
@@ -110,5 +125,5 @@ app.get("/about", function(req, res){
 })
 
 app.listen(PORT, function(){
-    console.log("The server is running on the port 2000");
+    console.log("The server is running on the port 3000");
 })
